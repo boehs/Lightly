@@ -42,38 +42,14 @@ The toolbar and menubar will follow the **titlebar** opacity. To configure the t
   1. Follow the instructions [here](https://aur.chaotic.cx/) on how to setup chaotic-aur 
   2. run: ```sudo pacman -Syyu lightly-qt```
 
-### Installing Lightly from RPM repository on openSUSE Tumbleweed:
+### Installing Lightly from COPR repository on Fedora 40 and above:
 
-1. Add "sputnik-look-and-feel" repository:
-```sudo zypper ar -ef https://download.opensuse.org/repositories/home:/sputnik:/look-and-feel/openSUSE_Tumbleweed/ sputnik-look-and-feel```
-2. Refresh repository list:
-```sudo zypper ref```
-3. You will be notified about received new repository key. And you will be asked if you want to accept the key. This repository is created on OBS. All builds are reproducible.
-Type "```a```" and press enter.
-4. Install Lightly:
-```sudo zypper in Lightly```
-
-### Fedora
-```
-sudo dnf install Lightly
-```
-
-### Fedora 32 RPM repository
-
-1. Create repo file:
-```
-echo  "[sputnik-look-and-feel]
-name=Look And Feel (Fedora_32)
-type=rpm-md
-baseurl=https://download.opensuse.org/repositories/home:/sputnik:/look-and-feel/Fedora_32/
-gpgcheck=1
-gpgkey=https://download.opensuse.org/repositories/home:/sputnik:/look-and-feel/Fedora_32/repodata/repomd.xml.key
-enabled=1" | sudo tee -a /etc/yum.repos.d/sputnik-look-and-feel.repo
-```
+1. Add "ricing" copr repository:
+```sudo dnf copr enable hazel-bunny/ricing```
 2. Install Lightly:
-```sudo dnf install Lightly```
-
-
+```sudo dnf upgrade && sudo dnf install lightly-qt5 lightly-qt6```
+3. You will be notified about received new repository key. And you will be asked if you want to accept the key. This repository is created on COPR. All builds are reproducible.
+Type "```y```" and press enter.
 
 ## Manual installation
 
