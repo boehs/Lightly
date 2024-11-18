@@ -2,7 +2,7 @@
 
 > I'm sorry to announce that I believe this fork must be essentially deprecated, my Linux machine has been broken for months by now and VMs run very poorly on the new macOS machine. With the building issues people have had, I cannot in good conscious merge the Qt6 PR without having built it myself, and I certainly won't be able to fix any bugs.
 
-> I encourage everyone to discuss their options and establish a fork. For security, I will not officially endorse any forks, but I want to leave the repository unarchived for the next few months to discuss who, if anybody, will be next, somebody who I'm sure will do a much better job than I did. If consensus does emerge, I will amend the repository's README to make note of that. I just don't think its fair to any one of you for me to be at the reigns, paralyzed. I hope that by stepping aside a new leader can emerge.
+> I encourage everyone to discuss their options and establish a fork. For security, I will not officially endorse any forks, but I want to leave the repository unarchived for the next few months to discuss who, if anybody, will be next. I just don't think its fair to any one of you for me to be at the reigns, paralyzed. I hope that by stepping aside a new leader can emerge.
 
 > Regardless of what happens, I'm happy that hundreds of you were able to extend the lifetime of this theme by a number of months. Peace ❤️
 
