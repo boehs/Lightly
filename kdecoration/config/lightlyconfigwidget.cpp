@@ -36,14 +36,14 @@ namespace Lightly
 {
 
     //_________________________________________________________
-    ConfigWidget::ConfigWidget( QWidget* parent, const QVariantList &args ):
-        KCModule(parent, args),
-        m_configuration( KSharedConfig::openConfig( QStringLiteral( "lightlyrc" ) ) ),
-        m_changed( false )
+    ConfigWidget::ConfigWidget(QObject *parent, const KPluginMetaData &data, const QVariantList & /*args*/)
+    : KCModule(parent, data)
+    , m_configuration(KSharedConfig::openConfig(QStringLiteral("lightlyrc")))
+    , m_changed(false)
     {
 
         // configuration
-        m_ui.setupUi( this );
+        m_ui.setupUi(widget());
 
         // track ui changes
         connect( m_ui.titleAlignment, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
@@ -98,7 +98,7 @@ namespace Lightly
         ExceptionList exceptions;
         exceptions.readConfig( m_configuration );
         m_ui.exceptions->setExceptions( exceptions.get() );
-        setChanged( false );
+        setNeedsSave(false);
 
     }
 
@@ -134,7 +134,7 @@ namespace Lightly
 
         // sync configuration
         m_configuration->sync();
-        setChanged( false );
+        setNeedsSave( false );
 
         // needed to tell kwin to reload when running from external kcmshell
         {
@@ -205,14 +205,8 @@ namespace Lightly
         // exceptions
         else if( m_ui.exceptions->isChanged() ) modified = true;
 
-        setChanged( modified );
+        setNeedsSave( modified );
 
-    }
-
-    //_______________________________________________
-    void ConfigWidget::setChanged( bool value )
-    {
-        emit changed( value );
     }
 
 }

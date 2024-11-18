@@ -1,2 +1,2 @@
 install(FILES Lightly.colors
-        DESTINATION ${DATA_INSTALL_DIR}/color-schemes/)
+        DESTINATION ${KDE_INSTALL_DATADIR}/color-schemes/)

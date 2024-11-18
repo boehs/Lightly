@@ -25,7 +25,7 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include "ui_lightlyexceptionlistwidget.h"
+#include "config/ui_lightlyexceptionlistwidget.h"
 #include "lightlyexceptionmodel.h"
 
 //* QDialog used to commit selected files

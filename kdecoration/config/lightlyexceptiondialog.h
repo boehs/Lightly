@@ -25,7 +25,7 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include "ui_lightlyexceptiondialog.h"
+#include "config/ui_lightlyexceptiondialog.h"
 #include "lightly.h"
 
 #include <QCheckBox>

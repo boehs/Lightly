@@ -108,16 +108,16 @@ namespace Lightly
                     << "Lightly::WidgetExplorer::eventFilter -"
                     << " event: " << event << " type: " << eventType( event->type() )
                     << " widget: " << widgetInformation( widget )
-                    << endl;
+                    <<Qt::endl;
 
                 // print parent information
                 QWidget* parent( widget->parentWidget() );
                 while( parent )
                 {
-                    QTextStream( stdout ) << "    parent: " << widgetInformation( parent ) << endl;
+                    QTextStream( stdout ) << "    parent: " << widgetInformation( parent ) << Qt::endl;
                     parent = parent->parentWidget();
                 }
-                QTextStream( stdout ) << "" << endl;
+                QTextStream( stdout ) << "" << Qt::endl;
 
             }
             break;

@@ -22,11 +22,7 @@
 
 #include <KPluginFactory>
 
-
-K_PLUGIN_FACTORY(
-    LightlyStyleConfigFactory,
-    registerPlugin<Lightly::ConfigurationModule>(QStringLiteral("kcmodule"));
-)
+K_PLUGIN_CLASS_WITH_JSON(Lightly::ConfigurationModule, "lightlystyleconfig.json")
 
 #include "lightlystyleconfigmodule.moc"
 
@@ -34,12 +30,12 @@ namespace Lightly
 {
 
     //_______________________________________________________________________
-    ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &args):
-        KCModule(parent, args)
+    ConfigurationModule::ConfigurationModule(QObject *parent, const KPluginMetaData &data)
+    : KCModule(parent, data)
     {
-        setLayout(new QVBoxLayout(this));
-        layout()->addWidget( m_config = new StyleConfig( this ) );
-        connect(m_config, static_cast<void (StyleConfig::*)(bool)>(&StyleConfig::changed), this, static_cast<void (KCModule::*)(bool)>(&KCModule::changed));
+       widget()->setLayout(new QVBoxLayout);
+       widget()->layout()->addWidget( m_config = new StyleConfig(widget()));
+       connect(m_config, &StyleConfig::changed, this, &KCModule::setNeedsSave);
     }
 
     //_______________________________________________________________________

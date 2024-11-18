@@ -30,7 +30,7 @@
 
 #include <KColorScheme>
 #include <KSharedConfig>
-
+#include <KStatefulBrush>
 #include <QPainterPath>
 #include <QIcon>
 #include <QWidget>

@@ -34,7 +34,7 @@ namespace Lightly
         Q_OBJECT
 
         public:
-        ConfigurationModule(QWidget *parent, const QVariantList &args);
+           ConfigurationModule(QObject *parent, const KPluginMetaData &data);
 
         public Q_SLOTS:
 

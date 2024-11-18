@@ -31,7 +31,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "lightlysettings.h"
-#include "ui_lightlydetectwidget.h"
+#include "config/ui_lightlydetectwidget.h"
 
 #include <QByteArray>
 #include <QCheckBox>
@@ -40,7 +40,7 @@
 #include <QLabel>
 
 #include <kwindowsystem.h>
-
+#include <kwindowinfo.h>
 namespace Lightly
 {
 

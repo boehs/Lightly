@@ -1,5 +1,5 @@
 [Desktop Entry]
-Exec=kcmshell5 lightlydecorationconfig
+Exec=kcmshell6 lightlydecorationconfig
 Icon=preferences-system-windows
 Type=Service
 X-KDE-ServiceTypes=KCModule

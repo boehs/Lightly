@@ -22,23 +22,14 @@ I am *not* endorsing these forks, but you should be aware of their existance and
   <img src="logo.png"/>
 </p>
 
-**This is a personal fork of Lightly where I merge pull requests sent to [Luwx/Lightly](https://github.com/Luwx/Lightly)**
-
-*Lightly* is a fork of breeze theme style that aims to be visually modern and minimalistic.
-
-# Notes about this fork
-
-- Do not open pull requests directly here unless they change/require some code that has diverged from upstream
-- If the pull request can sucessfully be merged into [Luwx/Lightly](https://github.com/Luwx/Lightly), please open it there and I will merge it here. My intention is not for this to be a permanent fork (hopefully Luwx comes back!)
-- Similarly, don't open issues here unless the issue was likely caused by some code here that's not in [Luwx/Lightly](https://github.com/Luwx/Lightly)
-
-These rules are because I don't want to diverge too far from upstream. It should be easy for Luwx to catch up.
-
-Thanks ❤️🐢
+*Lightly* is a fork of breeze theme style that aims to be visually modern and minimalistic. 
 
 ## Development ⚠️
 
 Lightly is a work in progress theme, there is still a lot to change, so expect bugs! Some applications may suddenly crash or flicker.
+
+If you have any feedback or encounter some bugs, feel free to open an issue or a pr.
+
 
 ## Screenshots
 
@@ -64,6 +55,45 @@ Most of these options are inherited from Breeze style, but Lightly has a few exc
 *  Sidebar opacity (under the **transparency** tab). By default, it's 60. If it's bellow 100, shadows will be drawn automatically. 
 
 The toolbar and menubar will follow the **titlebar** opacity. To configure the titlebar opacity, you will have to change the color scheme file directly in ~/.local/share/color-schemes. Open your desired color scheme and, in the ```[WM]``` section, add a fourth value to ```activeBackground``` and ```inactiveBackground```, like ```activeBackground=0,0,0,127``` where the last value is the alpha, that ranges from 0 (completely transparent) to 255 (totally opaque).
+
+## Installation
+
+### Installing Lightly from [chaotic-aur](https://aur.chaotic.cx/) on ArchLinux and its [derivatives](https://wiki.archlinux.org/title/Arch-based_distributions)
+  1. Follow the instructions [here](https://aur.chaotic.cx/) on how to setup chaotic-aur 
+  2. run: ```sudo pacman -Syyu lightly-qt```
+
+### Installing Lightly from RPM repository on openSUSE Tumbleweed:
+
+1. Add "sputnik-look-and-feel" repository:
+```sudo zypper ar -ef https://download.opensuse.org/repositories/home:/sputnik:/look-and-feel/openSUSE_Tumbleweed/ sputnik-look-and-feel```
+2. Refresh repository list:
+```sudo zypper ref```
+3. You will be notified about received new repository key. And you will be asked if you want to accept the key. This repository is created on OBS. All builds are reproducible.
+Type "```a```" and press enter.
+4. Install Lightly:
+```sudo zypper in Lightly```
+
+### Fedora
+```
+sudo dnf install Lightly
+```
+
+### Fedora 32 RPM repository
+
+1. Create repo file:
+```
+echo  "[sputnik-look-and-feel]
+name=Look And Feel (Fedora_32)
+type=rpm-md
+baseurl=https://download.opensuse.org/repositories/home:/sputnik:/look-and-feel/Fedora_32/
+gpgcheck=1
+gpgkey=https://download.opensuse.org/repositories/home:/sputnik:/look-and-feel/Fedora_32/repodata/repomd.xml.key
+enabled=1" | sudo tee -a /etc/yum.repos.d/sputnik-look-and-feel.repo
+```
+2. Install Lightly:
+```sudo dnf install Lightly```
+
+
 
 ## Manual installation
 
@@ -100,14 +130,12 @@ sudo eopkg install extra-cmake-modules kdecoration-devel qt5-declarative-devel q
 ### Build and install
 
 ```
-git clone --single-branch --depth=1 https://github.com/boehs/Lightly.git
+git clone --single-branch --depth=1 https://github.com/Luwx/Lightly.git
 cd Lightly && mkdir build && cd build
 cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib -DBUILD_TESTING=OFF ..
 make
 sudo make install
 ```
-
-For RedHat-based distros (like Fedora and OpenSUSE), run `cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib64 -DBUILD_TESTING=OFF ..` instead (#4)
 
 ### Uninstall
 
@@ -119,3 +147,8 @@ sudo make uninstall
 ## Acknowledgments
 
 Breeze authors and Kvantum developer Pedram Pourang.
+
+
+
+
+

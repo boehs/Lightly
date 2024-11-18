@@ -29,6 +29,10 @@
 #include <QPainter>
 #include <QtMath>
 
+#if __has_include(<KX11Extras>)
+#include <KX11Extras>
+#endif
+
 #if LIGHTLY_HAVE_X11
 #include <QX11Info>
 #endif
@@ -416,7 +420,7 @@ namespace Lightly
 
         QPalette copy( source );
 
-        const QList<QPalette::ColorRole> roles = { QPalette::Background, QPalette::Highlight, QPalette::WindowText, QPalette::ButtonText, QPalette::Text, QPalette::Button };
+        const QList<QPalette::ColorRole> roles = { QPalette::Window, QPalette::Highlight, QPalette::WindowText, QPalette::ButtonText, QPalette::Text, QPalette::Button };
         foreach( const QPalette::ColorRole& role, roles )
         { copy.setColor( role, KColorUtils::mix( source.color( QPalette::Active, role ), source.color( QPalette::Disabled, role ), 1.0-ratio ) ); }
 
@@ -1881,15 +1885,19 @@ namespace Lightly
     bool Helper::compositingActive() const
     {
 
-        #if LIGHTLY_HAVE_X11
-        if( isX11() )
-        { return QX11Info::isCompositingManagerRunning( QX11Info::appScreen() ); }
-        #endif
+     #if LIGHTLY_HAVE_X11
+       if( isX11()) {
+            #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+               return KWindowSystem::compositingActive();
+                 #elif __has_include(<KX11Extras>)
+                   return KX11Extras::compositingActive();
+           #endif
+        }
+     #endif
 
-        // use KWindowSystem
-        return KWindowSystem::compositingActive();
+    return true;
 
-    }
+   }
 
     //____________________________________________________________________
     bool Helper::hasAlphaChannel( const QWidget* widget ) const

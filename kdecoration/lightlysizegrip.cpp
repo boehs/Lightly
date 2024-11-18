@@ -62,7 +62,7 @@ namespace Lightly
         updatePosition();
 
         // connections
-        auto c = decoration->client().data();
+        auto c = decoration->client();
         connect( c, &KDecoration2::DecoratedClient::widthChanged, this, &SizeGrip::updatePosition );
         connect( c, &KDecoration2::DecoratedClient::heightChanged, this, &SizeGrip::updatePosition );
         connect( c, &KDecoration2::DecoratedClient::activeChanged, this, &SizeGrip::updateActiveState );
@@ -166,7 +166,7 @@ namespace Lightly
                 break;
             }
 
-            case Qt::MidButton:
+            case Qt::MiddleButton:
             {
                 hide();
                 break;

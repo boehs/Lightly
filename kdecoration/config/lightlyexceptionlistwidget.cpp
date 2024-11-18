@@ -323,7 +323,7 @@ namespace Lightly
     bool ExceptionListWidget::checkException( InternalSettingsPtr exception )
     {
 
-        while( exception->exceptionPattern().isEmpty() || !QRegExp( exception->exceptionPattern() ).isValid() )
+        while( exception->exceptionPattern().isEmpty() || !QRegularExpression( exception->exceptionPattern() ).isValid() )
         {
 
             QMessageBox::warning( this, i18n( "Warning - Lightly Settings" ), i18n("Regular Expression syntax is incorrect") );

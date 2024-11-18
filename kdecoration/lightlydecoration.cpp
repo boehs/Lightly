@@ -58,8 +58,7 @@ K_PLUGIN_FACTORY_WITH_JSON(
     "lightly.json",
     registerPlugin<Lightly::Decoration>();
     registerPlugin<Lightly::Button>();
-    registerPlugin<Lightly::ConfigWidget>();
-)
+ )
 
 namespace
 {
@@ -155,7 +154,7 @@ namespace Lightly
     static int g_shadowSizeEnum = InternalSettings::ShadowLarge;
     static int g_shadowStrength = 255;
     static QColor g_shadowColor = Qt::black;
-    static QSharedPointer<KDecoration2::DecorationShadow> g_sShadow;
+    static std::shared_ptr<KDecoration2::DecorationShadow> g_sShadow;
 
     //________________________________________________________________
     Decoration::Decoration(QObject *parent, const QVariantList &args)
@@ -171,7 +170,7 @@ namespace Lightly
         g_sDecoCount--;
         if (g_sDecoCount == 0) {
             // last deco destroyed, clean up shadow
-            g_sShadow.clear();
+            g_sShadow.reset();
         }
 
         deleteSizeGrip();
@@ -192,7 +191,7 @@ namespace Lightly
     QColor Decoration::titleBarColor() const
     {
 
-        auto c = client().data();
+        auto c = client();
         if( hideTitleBar() ) return c->color( ColorGroup::Inactive, ColorRole::TitleBar );
         else if( m_animation->state() == QAbstractAnimation::Running )
         {
@@ -208,7 +207,7 @@ namespace Lightly
     QColor Decoration::outlineColor() const
     {
 
-        auto c( client().data() );
+        auto c( client() );
         if( !m_internalSettings->drawTitleBarSeparator() ) return QColor();
         if( m_animation->state() == QAbstractAnimation::Running )
         {
@@ -223,7 +222,7 @@ namespace Lightly
     QColor Decoration::fontColor() const
     {
 
-        auto c = client().data();
+        auto c = client();
         if( m_animation->state() == QAbstractAnimation::Running )
         {
             return KColorUtils::mix(
@@ -235,9 +234,9 @@ namespace Lightly
     }
 
     //________________________________________________________________
-    void Decoration::init()
+    bool Decoration::init()
     {
-        auto c = client().data();
+        auto c = client();
 
         // active state change animation
         // It is important start and end value are of the same type, hence 0.0 and not just 0
@@ -252,21 +251,21 @@ namespace Lightly
         updateTitleBar();
         updateBlur();
         auto s = settings();
-        connect(s.data(), &KDecoration2::DecorationSettings::borderSizeChanged, this, &Decoration::recalculateBorders);
+        connect(s.get(), &KDecoration2::DecorationSettings::borderSizeChanged, this, &Decoration::recalculateBorders);
 
         // a change in font might cause the borders to change
-        connect(s.data(), &KDecoration2::DecorationSettings::fontChanged, this, &Decoration::recalculateBorders);
-        connect(s.data(), &KDecoration2::DecorationSettings::spacingChanged, this, &Decoration::recalculateBorders);
+        connect(s.get(), &KDecoration2::DecorationSettings::fontChanged, this, &Decoration::recalculateBorders);
+        connect(s.get(), &KDecoration2::DecorationSettings::spacingChanged, this, &Decoration::recalculateBorders);
 
         // buttons
-        connect(s.data(), &KDecoration2::DecorationSettings::spacingChanged, this, &Decoration::updateButtonsGeometryDelayed);
-        connect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &Decoration::updateButtonsGeometryDelayed);
-        connect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsRightChanged, this, &Decoration::updateButtonsGeometryDelayed);
+        connect(s.get(), &KDecoration2::DecorationSettings::spacingChanged, this, &Decoration::updateButtonsGeometryDelayed);
+        connect(s.get(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &Decoration::updateButtonsGeometryDelayed);
+        connect(s.get(), &KDecoration2::DecorationSettings::decorationButtonsRightChanged, this, &Decoration::updateButtonsGeometryDelayed);
 
         // full reconfiguration
-        connect(s.data(), &KDecoration2::DecorationSettings::reconfigured, this, &Decoration::reconfigure);
-        connect(s.data(), &KDecoration2::DecorationSettings::reconfigured, SettingsProvider::self(), &SettingsProvider::reconfigure, Qt::UniqueConnection );
-        connect(s.data(), &KDecoration2::DecorationSettings::reconfigured, this, &Decoration::updateButtonsGeometryDelayed);
+        connect(s.get(), &KDecoration2::DecorationSettings::reconfigured, this, &Decoration::reconfigure);
+        connect(s.get(), &KDecoration2::DecorationSettings::reconfigured, SettingsProvider::self(), &SettingsProvider::reconfigure, Qt::UniqueConnection );
+        connect(s.get(), &KDecoration2::DecorationSettings::reconfigured, this, &Decoration::updateButtonsGeometryDelayed);
 
         connect(c, &KDecoration2::DecoratedClient::adjacentScreenEdgesChanged, this, &Decoration::recalculateBorders);
         connect(c, &KDecoration2::DecoratedClient::maximizedHorizontallyChanged, this, &Decoration::recalculateBorders);
@@ -294,12 +293,13 @@ namespace Lightly
 
         createButtons();
         createShadow();
+        return true;
     }
 
     //________________________________________________________________
     void Decoration::updateBlur()
     {
-        auto c = client().data();
+        auto c = client();
         const QColor titleBarColor = c->color( c->isActive() ? ColorGroup::Active : ColorGroup::Inactive, ColorRole::TitleBar );
 
         // set opaque to false when non-maximized, regardless of color (prevents kornerbug)
@@ -316,7 +316,7 @@ namespace Lightly
     //________________________________________________________________
     void Decoration::calculateWindowAndTitleBarShapes(const bool windowShapeOnly)
     {
-        auto c = client().data();
+        auto c = client();
         auto s = settings();
 
         if (!windowShapeOnly || c->isShaded()) {
@@ -363,7 +363,7 @@ namespace Lightly
     void Decoration::updateTitleBar()
     {
         auto s = settings();
-        auto c = client().data();
+        auto c = client();
         const bool maximized = isMaximized();
         const int width =  maximized ? c->width() : c->width() - 2*s->largeSpacing()*Metrics::TitleBar_SideMargin;
         const int height = maximized ? borderTop() : borderTop() - s->smallSpacing()*Metrics::TitleBar_TopMargin;
@@ -378,7 +378,7 @@ namespace Lightly
         if( m_internalSettings->animationsEnabled() )
         {
 
-            auto c = client().data();
+            auto c = client();
             m_animation->setDirection( c->isActive() ? QAbstractAnimation::Forward : QAbstractAnimation::Backward );
             if( m_animation->state() != QAbstractAnimation::Running ) m_animation->start();
 
@@ -392,7 +392,7 @@ namespace Lightly
     //________________________________________________________________
     void Decoration::updateSizeGripVisibility()
     {
-        auto c = client().data();
+        auto c = client();
         if( m_sizeGrip )
         { m_sizeGrip->setVisible( c->isResizeable() && !isMaximized() && !c->isShaded() ); }
     }
@@ -461,7 +461,7 @@ namespace Lightly
     //________________________________________________________________
     void Decoration::recalculateBorders()
     {
-        auto c = client().data();
+        auto c = client();
         auto s = settings();
 
         // left, right and bottom borders
@@ -547,7 +547,7 @@ namespace Lightly
             if( isLeftEdge() )
             {
                 // add offsets on the side buttons, to preserve padding, but satisfy Fitts law
-                auto button = static_cast<Button*>( m_leftButtons->buttons().front().data() );
+                auto button = static_cast<Button*>( m_leftButtons->buttons().front() );
                 button->setGeometry( QRectF( QPoint( 0, 0 ), QSizeF( bWidth + hPadding, bHeight ) ) );
                 button->setFlag( Button::FlagFirstInList );
                 button->setHorizontalOffset( hPadding );
@@ -571,7 +571,7 @@ namespace Lightly
             if( isRightEdge() )
             {
 
-                auto button = static_cast<Button*>( m_rightButtons->buttons().back().data() );
+                auto button = static_cast<Button*>( m_rightButtons->buttons().back() );
                 button->setGeometry( QRectF( QPoint( 0, 0 ), QSizeF( bWidth + hPadding, bHeight ) ) );
                 button->setFlag( Button::FlagLastInList );
 
@@ -589,7 +589,7 @@ namespace Lightly
     void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
     {
         // TODO: optimize based on repaintRegion
-        auto c = client().data();
+        auto c = client();
         auto s = settings();
 
         calculateWindowAndTitleBarShapes();
@@ -632,7 +632,7 @@ namespace Lightly
     //________________________________________________________________
     void Decoration::paintTitleBar(QPainter *painter, const QRect &repaintRegion)
     {
-        const auto c = client().data();
+        const auto c = client();
 
         if ( !m_titleRect.intersects(repaintRegion) ) return;
 
@@ -742,7 +742,7 @@ namespace Lightly
         if( hideTitleBar() ) return qMakePair( QRect(), Qt::AlignCenter );
         else {
 
-            auto c = client().data();
+            auto c = client();
             const int leftOffset = m_leftButtons->buttons().isEmpty() ?
                 Metrics::TitleBar_SideMargin*settings()->smallSpacing():
                 m_leftButtons->geometry().x() + m_leftButtons->geometry().width() + Metrics::TitleBar_SideMargin*settings()->smallSpacing();
@@ -804,7 +804,7 @@ namespace Lightly
 
             const CompositeShadowParams params = lookupShadowParams(g_shadowSizeEnum);
             if (params.isNone()) {
-                g_sShadow.clear();
+                g_sShadow.reset();
                 setShadow(g_sShadow);
                 return;
             }
@@ -867,7 +867,7 @@ namespace Lightly
 
             painter.end();
 
-            g_sShadow = QSharedPointer<KDecoration2::DecorationShadow>::create();
+            g_sShadow = std::make_shared<KDecoration2::DecorationShadow>();
             g_sShadow->setPadding(padding);
             g_sShadow->setInnerShadowRect(QRect(outerRect.center(), QSize(1, 1)));
             g_sShadow->setShadow(shadowTexture);
